@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+ENV/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Project data & outputs (keep heavy runtime artifacts out of git)
+data/
+out/
+state/
+logs/
+
+# Keep empty directories via .gitkeep markers
+!data/**/.gitkeep
+!out/**/.gitkeep
+!state/**/.gitkeep
+!logs/.gitkeep
