@@ -476,3 +476,194 @@
 #     main()
 #
 #
+# # quick REPL check
+# import pandas as pd
+# from src.utils.filters import tradable_codes
+#
+# df = pd.DataFrame({
+#     "date": ["2025-08-13"],
+#     "code": ["X"],
+#     "close": [10.5],      # 未触及涨停
+#     "preclose": [10.0],
+#     "volume": [1000],
+#     "paused": [0]
+# })
+# print(tradable_codes(df, "2025-08-13", ["X"]))  # 期望: ['X']
+
+
+# file: smoke/smoke_myquant_io.py
+# -*- coding: utf-8 -*-
+"""
+Smoke test for src/api/myquant_io.py using gm.api (掘金GM).
+
+What it does
+------------
+1) Pull recent trading dates and pick a short window (default: last 15 trade days).
+2) Get CSI500 members on the last trade date (configurable index).
+3) Fetch OHLCV for a small sample of symbols within the window and validate schema.
+4) Fetch fundamentals snapshot (publication-aware with lag) for the same sample.
+5) Save small CSV samples to out/logs/ and print concise progress.
+
+How to run
+----------
+$ python smoke/smoke_myquant_io.py --index SHSE.000905 --days 15 --n 10 --fq pre --lag 30
+
+First-time setup
+----------------
+- pip install gm
+- In config.py, set: GM_TOKEN = "<your_token>"
+  (Alternatively, export environment variable GM_TOKEN)
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import sys
+from datetime import datetime, timedelta
+from typing import List
+
+import pandas as pd
+
+# Make project importable when running from repo root
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJ_ROOT = os.path.abspath(os.path.join(THIS_DIR, ".."))
+if PROJ_ROOT not in sys.path:
+    sys.path.insert(0, PROJ_ROOT)
+
+# Import the adapter under test
+from src.api.myquant_io import (  # noqa: E402
+    get_trade_days,
+    get_index_members,
+    get_ohlcv,
+    get_fundamentals_snapshot,
+)
+
+# Prefer our logging helper if available
+try:
+    from src.utils.logging import step, loop_progress, done, warn, error, set_verbosity, bind_logfile  # noqa: E402
+except Exception:  # fallback
+    def step(msg: str) -> None: print(f"[STEP] {msg}")
+    def loop_progress(msg: str) -> None: print(f"[LOOP] {msg}")
+    def done(msg: str = "done") -> None: print(f"[OK] {msg}")
+    def warn(msg: str) -> None: print(f"[WARN] {msg}")
+    def error(msg: str) -> None: print(f"[ERROR] {msg}")
+    def set_verbosity(level: str) -> None: pass
+    def bind_logfile(path: str) -> None: pass
+
+
+REQUIRED_OHLCV_COLS = {
+    "date", "code", "open", "high", "low", "close", "volume",
+    "amount", "preclose", "paused", "high_limit", "low_limit"
+}
+
+
+def ensure_dir(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
+
+
+def pick_trade_window(days: int) -> tuple[str, str, List[pd.Timestamp]]:
+    today = datetime.now().date()
+    start_guess = (today - timedelta(days=max(40, int(days) * 3))).strftime("%Y-%m-%d")
+    end_guess = today.strftime("%Y-%m-%d")
+    tds = get_trade_days(start_guess, end_guess)
+    if len(tds) < days:
+        raise RuntimeError(f"Not enough trade days in range [{start_guess},{end_guess}], got {len(tds)} < {days}")
+    window = tds[-days:]
+    return window[0].strftime("%Y-%m-%d"), window[-1].strftime("%Y-%m-%d"), tds
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--index", type=str, default="SHSE.000905", help="Index code for membership (e.g., SHSE.000905/CSI500)")
+    ap.add_argument("--days", type=int, default=15, help="Number of most-recent trade days to test")
+    ap.add_argument("--n", type=int, default=10, help="Number of symbols to sample for OHLCV/fundamentals")
+    ap.add_argument("--fq", type=str, default="pre", choices=["pre", "post", "none"], help="Adjustment for OHLCV")
+    ap.add_argument("--lag", type=int, default=30, help="Lag days for publication-aware fundamentals")
+    ap.add_argument("--log", type=str, default="out/logs/smoke_myquant_io.log", help="Log file path")
+    args = ap.parse_args()
+
+    # Logging setup
+    ensure_dir(os.path.dirname(args.log))
+    try:
+        set_verbosity("STEP")
+        bind_logfile(args.log)
+    except Exception:
+        pass
+
+    step("Smoke | Step 0: Check GM token presence (config/env)")
+    # Non-fatal check: if token missing, GM calls may fail with auth error; we hint how to fix.
+    token = None
+    try:
+        from config import GM_TOKEN  # type: ignore
+        token = GM_TOKEN
+    except Exception:
+        token = os.environ.get("GM_TOKEN")
+    if not token:
+        warn("GM_TOKEN missing. Set config.GM_TOKEN or env GM_TOKEN before running in production.")
+
+    # 1) Trading window
+    step("Smoke | Step 1: Resolve trade window")
+    start, end, all_tds = pick_trade_window(args.days)
+    last_trade_day = pd.Timestamp(all_tds[-1])
+    done(f"Trade window: {start} -> {end} (last={last_trade_day.date()})")
+
+    # 2) Index members
+    step(f"Smoke | Step 2: Get members of {args.index} @ {last_trade_day.date()}")
+    members = get_index_members(args.index, last_trade_day)
+    if not members:
+        raise RuntimeError("Empty index members. Check index code or network/token.")
+    done(f"Members = {len(members)}")
+
+    # Sample N symbols (stable slice)
+    sample_syms = members[: max(1, args.n)]
+    step(f"Sample {len(sample_syms)} symbols: {', '.join(sample_syms[:5])}{' ...' if len(sample_syms) > 5 else ''}")
+
+    # 3) OHLCV
+    step(f"Smoke | Step 3: Fetch OHLCV for {len(sample_syms)} symbols, fq={args.fq}, {start}->{end}")
+    ohlcv = get_ohlcv(sample_syms, start, end, args.fq)
+    if ohlcv.empty:
+        raise RuntimeError("OHLCV returned empty DataFrame.")
+    missing = REQUIRED_OHLCV_COLS - set(ohlcv.columns)
+    if missing:
+        warn(f"OHLCV missing columns: {sorted(missing)} (filters will fallback for limit prices if absent)")
+    # Basic consistency checks
+    assert ohlcv["code"].nunique() <= len(sample_syms)
+    assert ohlcv["date"].dt.normalize().equals(ohlcv["date"])
+    # Save sample
+    ensure_dir("out/logs")
+    ohlcv.head(50).to_csv("out/logs/smoke_ohlcv_head.csv", index=False)
+    done(f"OHLCV rows={len(ohlcv)}, saved head to out/logs/smoke_ohlcv_head.csv")
+
+    # 4) Fundamentals snapshot
+    step(f"Smoke | Step 4: Fundamentals snapshot @ {last_trade_day.date()} (lag={args.lag}d)")
+    funda = get_fundamentals_snapshot(last_trade_day, sample_syms, args.lag)
+    if funda is None or funda.empty:
+        warn("Fundamentals snapshot empty (plan/version may not have fields).")
+    else:
+        # Save sample
+        funda.reset_index().head(50).to_csv("out/logs/smoke_funda_head.csv", index=False)
+        done(f"Fundamentals cols={list(funda.columns)}, names={len(funda)}; saved head to out/logs/smoke_funda_head.csv")
+
+    done("Smoke test PASSED")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except AssertionError as e:
+        error(f"Assertion failed: {e}")
+        sys.exit(2)
+    except Exception as e:
+        # Provide actionable hints for first-time users
+        error(f"Smoke test FAILED: {e}")
+        hint = (
+            "Quick checklist:\n"
+            "1) `pip install gm` (ensure gm.api importable)\n"
+            "2) Set config.GM_TOKEN = '<your_token>' or export env GM_TOKEN\n"
+            "3) Network reachable to GM servers\n"
+            "4) Index code valid (e.g., SHSE.000905)\n"
+        )
+        print(hint)
+        sys.exit(3)
+

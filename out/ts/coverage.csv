@@ -1,0 +1,2 @@
+date,codes_total,codes_union_window,days_total,rows_raw,rows_valid,missing_paused_count,missing_limit_count,invalid_price_count,invalid_volume_count,files_written,window_start,window_end
+2025-08-15,500,500.0,26,12489,12489,0,12489,0,0,500,2025-07-11,2025-08-15
