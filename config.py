@@ -457,6 +457,102 @@ __all__ = [
     "ROLLING_KEEP_DAYS",
 ]
 
+# file: config.py
+# --- APPEND-ONLY: Industry config keys for industry.py (do NOT modify existing content above) ---
+
+# =========================
+# A. Industry standard & paths
+# =========================
+# Industry taxonomy standard used by industry.py filtering.
+# Allowed values: "SW"(default), "GICS", "CITIC", "CSRC"
+IND_STANDARD: str = "SW"
+
+# Industry hierarchy level (we use level-1 in regressions). Allowed: 1/2/3
+IND_LEVEL: int = 1
+
+# Root directory for industry mapping/snapshots (path join only, no I/O here)
+IND_DIR: str = "data/ref/industry_map"
+
+# Constituents CSV glob pattern (we'll select the most recent or <= date in industry.py)
+IND_CONS_GLOB: str = "data/ref/industry_map/QT_INDUS_CONSTITUENTS_202508191251.csv"
+
+# One-hot snapshot output path pattern; {date} should be YYYYMMDD
+IND_SNAPSHOT_PATTERN: str = "data/ref/industry_map/{date}_industry.csv"
+
+# JSON path to persist the union of all historical industry columns
+# (to keep column space monotonically non-decreasing)
+IND_ALLCOLUMNS_JSON: str = "data/ref/industry_map/latest_columns.json"
+
+
+# =========================
+# B. Source CSV column mapping (aligned with your file headers)
+# File name example: QT_INDUS_CONSTITUENTS_202508191251.csv
+# If 'effective_date' is absent, industry.py will fallback by priority:
+# effective_date -> updatetime -> tmstamp (no look-ahead).
+# =========================
+IND_COLMAP = {
+    "code": "STOCK_CODE",
+    "industry_code": "INDUSTRY_CODE",
+    "industry_name": "INDUSTRY_NAME",
+    "industry_level": "INDUSTRY_LEVEL",
+    "standard_code": "STANDARD_CODE",
+    "standard_name": "STANDARD_NAME",
+    "use_status": "USE_STATUS",
+    "effective_date": "INTO_DATE",   # 有 OUT_DATE 可忽略
+    "updatetime": "UPDATETIME",
+    "tmstamp": "TMSTAMP",
+    "entrytime": "ENTRYTIME",
+}
+
+
+# If 'use_status' column exists, keep rows with this ACTIVE flag
+IND_USE_STATUS_ACTIVE: int = 1
+
+
+# =========================
+# C. Misc (non-intrusive defaults)
+# =========================
+# Unified date format for snapshot naming (does not affect other modules)
+DATE_FMT: str = "%Y%m%d"
+
+# Reserved for potential online source TTL (not enforced now)
+IND_CACHE_TTL_DAYS: int = 3650
+
+
+# =========================
+# (Optional) Forecast EPS placeholders for future styles alignment
+# (No I/O by default; safe to leave as is)
+# =========================
+FCAST_EPS_CSV = None
+FCAST_EPS_COLMAP = {
+    "code": "code",
+    "forecast_date": "forecast_date",
+    "agency": "agency",
+    "forecast_eps": "forecast_eps",
+    "horizon": "horizon",
+}
+FCAST_EPS_POLICY: str = "csv_then_estimate"
+
+
+# =========================
+# Export: extend __all__ without touching existing exports
+# =========================
+try:
+    __all__.extend([
+        "IND_STANDARD", "IND_LEVEL", "IND_DIR", "IND_CONS_GLOB",
+        "IND_SNAPSHOT_PATTERN", "IND_ALLCOLUMNS_JSON", "IND_COLMAP",
+        "IND_USE_STATUS_ACTIVE", "DATE_FMT", "IND_CACHE_TTL_DAYS",
+        "FCAST_EPS_CSV", "FCAST_EPS_COLMAP", "FCAST_EPS_POLICY",
+    ])
+except NameError:
+    # In case __all__ was not defined earlier in this module
+    __all__ = [
+        "IND_STANDARD", "IND_LEVEL", "IND_DIR", "IND_CONS_GLOB",
+        "IND_SNAPSHOT_PATTERN", "IND_ALLCOLUMNS_JSON", "IND_COLMAP",
+        "IND_USE_STATUS_ACTIVE", "DATE_FMT", "IND_CACHE_TTL_DAYS",
+        "FCAST_EPS_CSV", "FCAST_EPS_COLMAP", "FCAST_EPS_POLICY",
+    ]
+
 
 # -------------------------
 # CLI Preview (debug only)

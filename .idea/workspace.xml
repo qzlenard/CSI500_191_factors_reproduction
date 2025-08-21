@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94eb25d9-be82-4731-8c8f-f76f80dd93b8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/utils/filters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/raw/ohlcv/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/ts/coverage.csv" beforeDir="false" afterPath="$PROJECT_DIR$/out/ts/coverage.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/myquant_io.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/myquant_io.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trading_calendar.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/trading_calendar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/universe.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/universe.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/fillters.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/industry.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/industry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +20,17 @@
       <list>
         <option value="Python Script" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -48,8 +52,10 @@
     "Python tests.Python tests in test.py.executor": "Run",
     "Python.config.executor": "Run",
     "Python.fillters.executor": "Run",
+    "Python.industry.executor": "Run",
     "Python.numerics.executor": "Run",
     "Python.preprocess.executor": "Run",
+    "Python.styles.executor": "Run",
     "Python.test.executor": "Run",
     "Python.trading_calendar.executor": "Run",
     "Python.universe.executor": "Run",
@@ -81,7 +87,8 @@
       <updated>1754989450080</updated>
       <workItem from="1754989451218" duration="309000" />
       <workItem from="1755050499899" duration="11300000" />
-      <workItem from="1755138134903" duration="22394000" />
+      <workItem from="1755138134903" duration="22734000" />
+      <workItem from="1755483395283" duration="27167000" />
     </task>
     <servers />
   </component>
@@ -89,13 +96,15 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$styles.coverage" NAME="styles Coverage Results" MODIFIED="1755745506577" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$test.coverage" NAME="test Coverage Results" MODIFIED="1755153436371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$universe.coverage" NAME="universe Coverage Results" MODIFIED="1755243351629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$industry.coverage" NAME="industry Coverage Results" MODIFIED="1755762861912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$fillters.coverage" NAME="fillters Coverage Results" MODIFIED="1755142056171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/utils" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$trading_calendar.coverage" NAME="trading_calendar Coverage Results" MODIFIED="1755155512192" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$.coverage" NAME=" Coverage Results" MODIFIED="1755140711958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$numerics.coverage" NAME="numerics Coverage Results" MODIFIED="1755139593395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/utils" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$config.coverage" NAME="config Coverage Results" MODIFIED="1755243114918" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$preprocess.coverage" NAME="preprocess Coverage Results" MODIFIED="1755231820696" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$config.coverage" NAME="config Coverage Results" MODIFIED="1755758675659" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$preprocess.coverage" NAME="preprocess Coverage Results" MODIFIED="1755243911444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>
