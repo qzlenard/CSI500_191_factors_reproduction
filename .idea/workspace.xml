@@ -7,8 +7,23 @@
     <list default="true" id="94eb25d9-be82-4731-8c8f-f76f80dd93b8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/industry.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/industry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/ts/coverage.csv" beforeDir="false" afterPath="$PROJECT_DIR$/out/ts/coverage.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/ts/factor_returns.csv" beforeDir="false" afterPath="$PROJECT_DIR$/out/ts/factor_returns.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/ts/metrics.csv" beforeDir="false" afterPath="$PROJECT_DIR$/out/ts/metrics.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_daily.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_daily.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/alpha.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/alpha.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/myquant_io.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/myquant_io.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/factors_191.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/factors_191.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/neutralize.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/neutralize.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/portfolio.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/portfolio.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/preprocess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/regression.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/styles.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trading_calendar.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/trading_calendar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/universe.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/universe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/state.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/state/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/state/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,17 +65,24 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python tests.Python tests in test.py.executor": "Run",
+    "Python.alpha.executor": "Run",
     "Python.config.executor": "Run",
+    "Python.factors_191.executor": "Run",
     "Python.fillters.executor": "Run",
     "Python.industry.executor": "Run",
+    "Python.neutralize.executor": "Run",
     "Python.numerics.executor": "Run",
+    "Python.portfolio.executor": "Run",
     "Python.preprocess.executor": "Run",
+    "Python.regression.executor": "Run",
+    "Python.run_daily.executor": "Run",
     "Python.styles.executor": "Run",
     "Python.test.executor": "Run",
     "Python.trading_calendar.executor": "Run",
     "Python.universe.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Code/R/quant-leiying/task5/191multi-factor reproduce",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -88,23 +110,52 @@
       <workItem from="1754989451218" duration="309000" />
       <workItem from="1755050499899" duration="11300000" />
       <workItem from="1755138134903" duration="22734000" />
-      <workItem from="1755483395283" duration="27167000" />
+      <workItem from="1755483395283" duration="31101000" />
+      <workItem from="1756088517418" duration="907000" />
+      <workItem from="1756105340175" duration="22000" />
+      <workItem from="1756176930708" duration="14152000" />
+      <workItem from="1756262169629" duration="32401000" />
+      <workItem from="1756692487039" duration="67706000" />
+      <workItem from="1757297445193" duration="17569000" />
+      <workItem from="1757383756962" duration="16902000" />
+      <workItem from="1757470238815" duration="11997000" />
+      <workItem from="1757559856707" duration="3638000" />
+      <workItem from="1761761597281" duration="11000" />
+      <workItem from="1761762028754" duration="87000" />
+      <workItem from="1761765240016" duration="409000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/run_daily.py</url>
+          <line>751</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$styles.coverage" NAME="styles Coverage Results" MODIFIED="1755745506577" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$test.coverage" NAME="test Coverage Results" MODIFIED="1755153436371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$universe.coverage" NAME="universe Coverage Results" MODIFIED="1755243351629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$alpha.coverage" NAME="alpha Coverage Results" MODIFIED="1756697166096" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$run_daily.coverage" NAME="run_daily Coverage Results" MODIFIED="1757563668681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$styles.coverage" NAME="styles Coverage Results" MODIFIED="1756868414638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$regression.coverage" NAME="regression Coverage Results" MODIFIED="1756693393804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$test.coverage" NAME="test Coverage Results" MODIFIED="1756869318592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$industry.coverage" NAME="industry Coverage Results" MODIFIED="1755762861912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$fillters.coverage" NAME="fillters Coverage Results" MODIFIED="1755142056171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/utils" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$trading_calendar.coverage" NAME="trading_calendar Coverage Results" MODIFIED="1755155512192" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$.coverage" NAME=" Coverage Results" MODIFIED="1755140711958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$neutralize.coverage" NAME="neutralize Coverage Results" MODIFIED="1757403181026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/191multi_factor_reproduce$numerics.coverage" NAME="numerics Coverage Results" MODIFIED="1755139593395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/utils" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$config.coverage" NAME="config Coverage Results" MODIFIED="1755758675659" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$preprocess.coverage" NAME="preprocess Coverage Results" MODIFIED="1755243911444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$config.coverage" NAME="config Coverage Results" MODIFIED="1757471333678" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$preprocess.coverage" NAME="preprocess Coverage Results" MODIFIED="1756886409388" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$universe.coverage" NAME="universe Coverage Results" MODIFIED="1756886394912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$factors_191.coverage" NAME="factors_191 Coverage Results" MODIFIED="1756362463896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$trading_calendar.coverage" NAME="trading_calendar Coverage Results" MODIFIED="1756953007676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/191multi_factor_reproduce$portfolio.coverage" NAME="portfolio Coverage Results" MODIFIED="1756707982242" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>

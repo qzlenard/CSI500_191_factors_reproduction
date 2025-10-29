@@ -190,21 +190,19 @@ def _map_adjust(fq: str):
     return ADJUST_PREV
 
 
-def _to_naive_series(x) -> pd.Series:
-    """Convert datetime-like Series or DatetimeIndex to naive Series (datetime64[ns])."""
-    if isinstance(x, pd.DatetimeIndex):
+def _to_naive_series(x):
+    s = pd.to_datetime(x, errors="coerce")
+    if hasattr(s, "dt"):
         try:
-            x = x.tz_convert(None)
+            tz = getattr(s.dt, "tz", None)
+            if tz is not None:
+                try:
+                    s = s.dt.tz_convert("Asia/Shanghai")
+                except Exception:
+                    s = s.dt.tz_localize("UTC").dt.tz_convert("Asia/Shanghai")
+                s = s.dt.tz_localize(None)
         except Exception:
-            x = x
-        return pd.Series(x, index=getattr(x, "index", None))
-    s = pd.to_datetime(x, errors="coerce", utc=True)
-    if isinstance(s, pd.DatetimeIndex):
-        s = pd.Series(s)
-    try:
-        s = s.dt.tz_convert(None)
-    except Exception:
-        s = pd.to_datetime(s, errors="coerce")
+            s = s.dt.tz_localize(None)
     return s
 
 
@@ -330,6 +328,9 @@ def get_ohlcv(codes: list[str], start: str, end: str, fq: str) -> pd.DataFrame:
 
         if df is None or len(df) == 0:
             continue
+        if "date" not in df.columns:
+            df = df.rename_axis("date").reset_index()
+        df["date"] = _to_naive_series(df["date"]).dt.normalize()
 
         df = df.copy()
         if "eob" in df.columns:
@@ -346,7 +347,9 @@ def get_ohlcv(codes: list[str], start: str, end: str, fq: str) -> pd.DataFrame:
                 continue
             dt = _to_naive_series(first_col)
 
-        df["date"] = pd.to_datetime(dt).dt.normalize()
+        df["date"] = _to_naive_series(df["date"])
+        df["date"] = pd.to_datetime(df["date"], errors="coerce").dt.normalize()
+
         df["code"] = sym
 
         keep = ["date", "code", "open", "high", "low", "close", "volume", "amount"]
@@ -553,3 +556,152 @@ def get_fundamentals_snapshot(date: pd.Timestamp, codes: list[str], lag_days: in
 
     done(f"Snapshot fields={list(base.columns)}, names={len(base)}")
     return base
+
+# file: src/api/myquant_io.py  （追加在文件末尾）
+
+def get_index_weights_ffmc_monthly(index_code: str,
+                                   date: pd.Timestamp,
+                                   backfill_months: int = 12) -> pd.Series:
+    """
+    用“自由流通市值”在**月初第一个交易日**计算并缓存月度基准权重。
+
+    缓存位置：
+        data/ref/index_weights/{<规范化指数代码>}/{YYYYMM}.csv
+    CSV列： code, weight  （code形如 '600519.SH'；同月内多次调用命中缓存）
+
+    行为：
+    - 当月文件存在：直接读缓存并返回；
+    - 不存在：计算当月；若之前月份也缺，最多**回补 backfill_months 个月**；
+    - 权重 = float_mktcap / sum ；若 float_mktcap 缺失则用 market_cap；再不行退化为等权。
+
+    参数
+    ----
+    index_code : 'SHSE.000905' / '000905.SH' / 'CSI500' 等
+    date       : 属于目标月份的任意日期
+    backfill_months : 缺月回补的最大月数（默认12）
+
+    返回
+    ----
+    pd.Series(index='600519.SH', values=权重，和为1)
+    """
+    from config import load_config  # 延迟导入，避免循环依赖
+    from src.utils.fileio import ensure_dir, read_csv_safe, write_csv_atomic
+
+    CFG = load_config()
+    P = CFG.paths
+
+    # GM→行情代码（'SHSE.600519' -> '600519.SH'）
+    def _gm_to_market(s: str) -> str:
+        s = str(s).upper()
+        if s.startswith("SHSE."):
+            return s.split(".", 1)[1] + ".SH"
+        if s.startswith("SZSE."):
+            return s.split(".", 1)[1] + ".SZ"
+        return s
+
+    idx_norm = _normalize_index(index_code)
+    t = pd.Timestamp(date).normalize()
+    ym = t.strftime("%Y%m")
+
+    base_dir = P.ref_dir / "index_weights" / idx_norm
+    ensure_dir(base_dir)
+
+    def _month_path(ym_: str):
+        return base_dir / f"{ym_}.csv"
+
+    # 1) 缓存命中
+    cur_path = _month_path(ym)
+    cached = read_csv_safe(str(cur_path), parse_dates=None, default=None)
+    if cached is not None and not cached.empty and {"code", "weight"} <= set(cached.columns):
+        s = pd.to_numeric(cached.set_index("code")["weight"], errors="coerce").fillna(0.0)
+        s = s[s > 0]
+        s = s / s.sum() if s.sum() > 0 else s
+        done(f"[BENCH-FFMC] cache hit {idx_norm} {ym}: names={len(s)}, sum={float(s.sum()):.4f}")
+        return s
+
+    # 2) 需要计算的月份（含当月；遇到已有文件就停止回溯）
+    months_to_compute: list[str] = []
+    cur = pd.Timestamp(t.year, t.month, 1)
+    for _ in range(max(1, int(backfill_months))):
+        ym_i = cur.strftime("%Y%m")
+        if not _month_path(ym_i).exists():
+            months_to_compute.append(ym_i)
+        else:
+            break
+        cur = (cur - pd.offsets.MonthBegin(1)).normalize()
+    months_to_compute = list(reversed(months_to_compute))  # 旧→新
+
+    for ym_i in months_to_compute:
+        first_day = pd.Timestamp(ym_i + "01")
+        last_day = (first_day + pd.offsets.MonthEnd(0)).normalize()
+
+        # 当月第一个交易日
+        tdays = get_trade_days(first_day.strftime("%Y-%m-%d"), last_day.strftime("%Y-%m-%d"))
+        if not tdays:
+            warn(f"[BENCH-FFMC] no trading day for {idx_norm} month {ym_i}; skip.")
+            continue
+        m0 = tdays[0]
+
+        # 成分（按月初那天）
+        try:
+            members = get_index_members(idx_norm, m0)
+        except Exception as ex:
+            warn(f"[BENCH-FFMC] get_index_members failed {idx_norm} @ {m0}: {ex}")
+            members = []
+
+        if not members:
+            warn(f"[BENCH-FFMC] empty members {idx_norm} @ {m0}; skip month {ym_i}.")
+            continue
+
+        # 市值快照（lag=0，用日级市值）
+        try:
+            snap = get_fundamentals_snapshot(m0, codes=members, lag_days=0)
+        except Exception as ex:
+            warn(f"[BENCH-FFMC] fundamentals snapshot failed @ {m0}: {ex}")
+            snap = pd.DataFrame(index=pd.Index([_gm_to_market(c) for c in members], name="code"))
+
+        if snap is None or snap.empty:
+            # 等权兜底
+            codes = pd.Index([_gm_to_market(c) for c in members], name="code")
+            ser = pd.Series(1.0 / len(codes), index=codes, name="weight")
+        else:
+            df = snap.copy()
+            # 索引转为 '600519.SH'
+            if df.index.name is None:
+                df.index = pd.Index([_gm_to_market(x) for x in df.index], name="code")
+            else:
+                df.index = df.index.map(_gm_to_market)
+
+            ff = df.get("float_mktcap")
+            if ff is None or ff.isna().all():
+                ff = df.get("market_cap")
+            if ff is None or ff.isna().all():
+                codes = df.index
+                ser = pd.Series(1.0 / len(codes), index=codes, name="weight")
+            else:
+                w = pd.to_numeric(ff, errors="coerce").fillna(0.0).clip(lower=0.0)
+                ser = (w / float(w.sum())) if float(w.sum()) > 0 else pd.Series(1.0 / len(w), index=df.index)
+                ser = ser.rename("weight")
+                ser.index.name = "code"
+
+        # 写入月度缓存
+        write_csv_atomic(str(_month_path(ym_i)), ser.reset_index(), index=False)
+        done(f"[BENCH-FFMC] cache write {idx_norm} {ym_i}: names={len(ser)}, sum={float(ser.sum()):.4f}")
+
+    # 3) 返回当月
+    cached = read_csv_safe(str(cur_path), parse_dates=None, default=None)
+    if cached is None or cached.empty:
+        warn(f"[BENCH-FFMC] cache miss after compute {idx_norm} {ym}; returning empty.")
+        return pd.Series(dtype=float)
+    s = pd.to_numeric(cached.set_index("code")["weight"], errors="coerce").fillna(0.0)
+    s = s[s > 0]
+    s = s / s.sum() if s.sum() > 0 else s
+    return s
+
+
+def get_index_weights(index_code: str, date: pd.Timestamp) -> pd.Series:
+    """
+    对外包装：返回`date`所在月份的**自由流通市值加权**基准权重（带缓存）。
+    以后若接入官方“历史成分权重”，可以在此先尝试官方数据，再回退到本函数。
+    """
+    return get_index_weights_ffmc_monthly(index_code=index_code, date=date, backfill_months=12)

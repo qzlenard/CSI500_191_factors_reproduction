@@ -237,6 +237,7 @@ def with_file_lock(lock_name: str,
     Raises:
         TimeoutError: when lock cannot be acquired within timeout.
     """
+
     locks_dir_p = Path(locks_dir)
     ensure_dir(locks_dir_p)
 

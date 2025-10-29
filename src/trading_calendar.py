@@ -210,19 +210,26 @@ def next_trading_day(date: pd.Timestamp | str, n: int = 1) -> pd.Timestamp:
     i = _locate_index(cal, d)
     if i >= len(cal):
         raise IndexError("Calendar overflow while seeking next trading day")
-    target = i + (n - 1)
+    target = i + n
     if target >= len(cal):
         raise IndexError("Calendar overflow while seeking next trading day")
     return pd.Timestamp(cal[target].date())
 
 
 def shift_trading_day(date: pd.Timestamp | str, n: int) -> pd.Timestamp:
-    """Shift date by n trading days (positive = forward, negative = backward)."""
+    """Shift by n trading days. n>0 forward, n<0 backward, n=0 -> snap to nearest trading day (<= date)."""
+    d = _to_ts_date(date)
     if n == 0:
-        return next_trading_day(date, 1)
+        cal = get_trading_days(d - pd.Timedelta(days=365), d + pd.Timedelta(days=365))
+        cal = pd.to_datetime(cal).normalize().tolist()
+        if d in cal:
+            return d
+        # 回退到 <= d 的最近一个交易日
+        i = max(0, max([k for k, x in enumerate(cal) if x <= d], default=0))
+        return cal[i]
     if n > 0:
-        return next_trading_day(date, n)
-    return prev_trading_day(date, -n)
+        return next_trading_day(d, n)
+    return prev_trading_day(d, -n)
 
 
 def last_n_trading_days(end: pd.Timestamp | str, n: int) -> List[pd.Timestamp]:

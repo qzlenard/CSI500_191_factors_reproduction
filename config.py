@@ -202,10 +202,10 @@ class AlphaConfig:
 @dataclass
 class PortfolioConfig:
     """Portfolio building from alpha cross-section."""
-    mode: str = "long_only_topk"  # {'long_only_topk','long_short_neutral',...}
+    mode: str = "optimizer"  # {'long_only_topk','long_short_neutral',...}
     top_k: int = 50
-    max_weight: float = 0.05
-    neutral: bool = False
+    max_weight: float = 1
+    neutral: bool = True
     turnover_threshold: float = 0.01
     px_type: str = "close"
     note: str = "auto"
@@ -360,7 +360,7 @@ CFG: Config = load_config()
 
 # --- GM token exposure for adapters expecting `config.GM_TOKEN` ---
 # User-provided token (overrides env). Clear this string to fall back to env.
-GM_TOKEN: Optional[str] = "1d43f62303ce89bd50caa3a1bb339f463c875bd3"
+GM_TOKEN: Optional[str] = ""
 if not GM_TOKEN:
     GM_TOKEN = os.environ.get(CFG.fetch.token_env_key, None)
 
@@ -552,6 +552,11 @@ except NameError:
         "IND_USE_STATUS_ACTIVE", "DATE_FMT", "IND_CACHE_TTL_DAYS",
         "FCAST_EPS_CSV", "FCAST_EPS_COLMAP", "FCAST_EPS_POLICY",
     ]
+
+
+#factors_191_yaml
+CFG.paths.factors191_yaml = r"D:\Code\R\quant-leiying\task5\191multi-factor reproduce\data\ref\191factors\191.yaml"
+
 
 
 # -------------------------
